@@ -1,0 +1,5 @@
+host=localhost
+db=snort.db
+user=username
+passwd=password
+proxy=127.0.0.1:80
