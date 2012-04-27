@@ -2,9 +2,6 @@
 
 pyver = '0.35.4.17'
 
-##### Set test = 1 for extra output
-test = 0
-
 
 ##### Timing my self
 import time
@@ -562,6 +559,7 @@ while rc != dbqry.num_rows():
                        	classes[line[0][0]] = line[0][1] 
         except Exception:
                 rc += 1
+
 ##### Pre-Build IP ranges #####
 if src:
 	# Full 4 oct. IP, just plug in
@@ -929,109 +927,6 @@ if int(start) != 0:
 slide(0,"Now")
 print '</tr></table>'
 
-
-##### Print out extra info if test mode is on
-if test > 0: 
-	print '<ul class="mktree" id="root">'
-	print '<li><font size="2">SQL Query</font>'
-	print '<ul>'
-	#print '<li><textarea rows="6" cols="160">'+qrystr+'</textarea></li>'
-	print '<li><font size="2">'+qrystr+'</font></li>'
-	print '</ul></li></ul>'
-	print '<ul class="mktree" id="root">'
-	print '<li><font size="2">Passed Vars'
-	print '<ul>'
-	print '<li>a='+start+'</li>'
-	print '<li>o='+end+'</li>'
-	print '<li>a_yr='
-	if a_yr:
-		print a_yr
-	print '</li>'
-	print '<li>a_mo='
-	if a_mo:
-		print a_mo
-	print '</li>'
-	print '<li>a_dy='
-	if a_dy:
-		print a_yr
-	print '</li>'
-	print '<li>a_hr='
-	if a_hr:
-		print a_hr
-	print '</li>'
-	print '<li>a_mn='
-	if a_mn:
-		print a_mn
-	print '</li>'
-	print '<li>o_yr='
-	if o_yr:
-		print o_yr
-	print '</li>'
-	print '<li>o_mo='
-	if o_mo:
-		print o_mo	
-	print '</li>'
-	print '<li>o_dy='
-	if o_dy:
-		print o_dy	
-	print '</li>'
-	print '<li>o_hr='
-	if o_hr:
-		print o_hr	
-	print '</li>'
-	print '<li>o_mn='
-	if o_mn:
-		print o_mn
-	print '</li>'
-	print '<li>mode='
-	if mode:
-		print mode	
-	print '</li>'
-	print '<li>src='
-	if src:
-		print src
-	print '</li>'
-	print '<li>dst='
-	if dst:
-		print dst
-	print '</li>'
-	print '<li>snsr='
-	if snsr:
-		print snsr
-	print '</li>'
-	print '<li>tcpsrc='
-	if tcpsrc:
-		print tcpsrc
-	print '</li>'
-	print '<li>tcpdst='
-	if tcpdst:
-		print tcpdst
-	print '</li>'
-	print '<li>udpsrc='
-	if udpsrc:
-		print udpsrc
-	print '</li>'
-	print '<li>udpdst='
-	if udpdst:
-		print udpdst	
-	print '</li>'
-	print '<li>sig='
-	if sig:
-		print sig
-	print '</li>'
-	print '<li>sigx='
-	if sigx:
-		print sigx
-	print '</li>'
-	print '<li>cls='
-	if cls:
-		print cls
-	print '</li>'
-	print '<li>clsx='
-	if clsx:
-		print clsx
-	print '</li>'
-	print '</font></ul></li></ul>'
 
 
 ##### Unpack unique event,src,dst sets and sort
