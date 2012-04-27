@@ -1,7 +1,6 @@
 Pygmy Installation(rough):
 
 Requirements:
-Python 2.x , tested with 2.7.2 but should be compatible with any recent 2.x versions.
 Pygmy assumes you have a snort IDS environment with a standard mysql DB set up.
 If you are starting fresh I would recommend an install guide from snort.org/docs to get started.
 
