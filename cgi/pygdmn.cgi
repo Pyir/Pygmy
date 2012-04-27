@@ -19,8 +19,9 @@ conf_prx=''
 conf=open('/etc/pyg.conf','r')
 for line in conf:
         if line.find('proxy=') == 0:
-                conf_prx=line.split('=')[1].rstrip('\n')
-
+                cpx=line.split('=')[1].rstrip('\n')
+		if len(cpx) > 0:
+			conf_prx=cpx
 
 ##### Define some REs
 re_ten=re.compile('^10\.')

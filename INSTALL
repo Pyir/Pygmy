@@ -1,76 +1,77 @@
 Pygmy Installation(rough):
 
-Python 2.x , tested solely on 2.7.2 but should be compatible with any recent 2.x version.
-Python 3.x not currently supported.
-All testing and development on Debian 5.0.8
+Requirements:
+Python 2.x , tested with 2.7.2 but should be compatible with any recent 2.x versions.
+Pygmy assumes you have a snort IDS environment with a standard mysql DB set up.
+If you are starting fresh I would recommend an install guide from snort.org/docs to get started.
 
-One pre-req package will be needed to install pygmy.
-Many pre-loaded python environments may have this package already. 
-The package can be found in the following locations for example:
-	Mysql-python - http://sourceforge.net/projects/mysql-python/ 
+Python 2.7 , tested primarily on 2.7.1 but any recent 2.x should should be OK
+
+MySQLdb/mysql-python
+The package can be found at:
+	Project: http://sourceforge.net/projects/mysql-python/ 
 	Fedora: https://admin.fedoraproject.org/pkgdb/acls/name/MySQL-python
 	Debian: http://packages.debian.org/sid/python-mysqldb
 	Ubuntu: http://packages.ubuntu.com/oneiric/python/python-mysqldb
 	etc..	
-	
-Un-gzip & un-tar, from directory run "python setup.py install"
-Install can be tested by running a python shell and typing 'import _mysql' or 'import MySQLdb'
-No errors means success. 
-"""
-	#python
-	>>>import _mysql
-	>>>
-"""
+
+	>tar -xf MySQL-python-1.2.3.tar.gz
+	>cd MySQL-python-1.2.3
+	>python setup.py install
+	>python	
+		>>>import _mysql
+		>>>
+		No errors means success
+
 
 Installation of pygmy involves 3 steps.
-1) copy the four files from /cgi (pygmy.cgi|pygqry.cgi|pygeve.cgi|pygdmn.cgi) to your local cgi-bin folder. In Debian this is /usr/lib/cgi-bin/pyg*.cgi.
+1) Copy the four cgi files from /cgi (pygmy.cgi|pygqry.cgi|pygeve.cgi|pygdmn.cgi) to your local cgi-bin folder. 
+	(Debian: /usr/lib/cgi-bin/, Fedora: /var/www/cgi-bin/, etc)
 	1a) Chmod and chown the files as needed
-		# chown root:www-data /usr/lib/cgi-bin/pyg*
-		# chmod 750 /usr/lib/cgi-bin/pyg*
-		~install script may handle this in the future
+		IE:
+		>chown root:www-data /usr/lib/cgi-bin/pyg*
+		>chmod 750 /usr/lib/cgi-bin/pyg*
+
 	1b) You may have to configure apache to utilize cgi
-			Ref: "http://httpd.apache.org/docs/2.0/howto/cgi.html"
+		Ref: "http://httpd.apache.org/docs/2.0/howto/cgi.html"
+
 	1c) You may also have to modify the first line of the pyg*.cgi files for your path to python
 		They currently read "!#/usr/bin/python"
-		The 'ScriptAlias' in httpd.conf can be refered to for this path.
-		~install script may handle this in the future
+		The 'ScriptAlias' in httpd.conf can be refered to for this path or ">whereis python". Typically it's /usr/bin/python
 	
-2) Copy the /pyg.conf to the /etc directory (IE /etc/pyg.conf)
+2) Copy the /pyg.conf to the /etc directory (IE /etc/pyg.conf)a
+	>cp ./pyg.conf.sample /etc/pyg.conf
+
 	The pyg.conf file contains DB info and proxy settings as such:
 		"""
-		 host=localhost
-		 db=snort.db
-		 user=username
-		 passwd=password
-		 proxy=127.0.0.1:80
+		host=localhost
+		db=snort.db
+		user=username
+		passwd=password
+		proxy=127.0.0.1:80
 		"""	
-	2a) Modify the settings as needed. If no proxy is required or domain research functions are not desired use
-	    127.0.0.1:81 or a similar dead end.
-	2b) Permissions should be set on this file to allow apache2 (IE www-data in Debian) to access this file.
-	    # chown root:www-data /etc/pyg.conf
-	    # chmod 640 /etc/pyg.conf
 
-3) Copy the /www/pygmy folder to your www document root (IE /var/www/pygmy/*)
-	The folder contains:
-		"""
-		 /var/www/pygmy/
-		  bullet.gif
-		  minus.gif
-		  mktree.css
-		  mktree.js
-		  plus.gif
-		  popup.js
-		  pyg.jpg
-		"""
+	2a) Modify the settings as needed. If no proxy is required or domain research functions are not desired remove the proxy= linei or leave it blank.
+
+	2b) Permissions should be set on this file to allow apache2 (IE www-data in Debian) to access this file.
+		>chown root:www-data /etc/pyg.conf
+		>chmod 640 /etc/pyg.conf
+	    
+
+3) Copy the /www/pygmy folder to your www document root
+	>cp ./pygmy /var/www or cp ./pygmy /var/www/html
+
 	3a) Permissions should be set appropriately for your web server
-		# chmod 440 pyg*.cgi
-		# chown root:www-data (Debian example)
-		~install script may handle this in the future
+		>chown root:www-data (Debian example)
+		>chmod 550 /var/www/(html)/pygmy
+		>chmod 440 /var/www/(html)/pygmy/*
 
 4) Optionally you can copy the pygmy.html page to your document root to auto-redirect to the cgi
-	# cp /pygmy/pygmy.html.sample /var/www/pygmy.html
-	# chmod 440 /var/www/pygmy.html
-	~install script may handle this in the future
+	>cp /pygmy/pygmy.html.sample /var/www/pygmy.html
+	>chown root:www-data /var/www/pygmy.html	
+	>chmod 440 /var/www/pygmy.html
+
+5) SELinux users may need to run a "setsebool -P httpd_can_network_connect_db on" to allow pygmy to connect to remote snort DBs.
 
 Browse to http://your.host.tld/pygmy.html -or- http://your.host.tld/cgi-bin/pygmy.cgi
 
