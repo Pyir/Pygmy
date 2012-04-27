@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/python
 
 pyver = '0.35.4.17'
 
@@ -429,27 +429,6 @@ if afrm == 1:
 	print ' ( <font color="red">found</font> )<br>'
 if afrm == 0:
 	print ' ( <font color="green">null</font> )<br>' 
-
-
-#print '&nbsp;<a href="http://amada.abuse.ch/?search='+ip+'" target="_blank">Amada</a>'
-#url = 'http://amada.abuse.ch/?search='+ip
-#page = urllib2.urlopen(url)
-#re_da = re.compile('<td>Dateadded')
-#cnt = 0
-#while 1:
-#	line = page.readline()
-#	if not line:
-#		break
-#	if re_da.search(line):
-#		cnt += 1
-#print ' ( hits: '
-#if cnt == 0:
-#	print '<font color="green">'
-#if cnt > 0 and cnt < 5:
-#	print '<font color="orange">'
-#if cnt >= 5:
-#	print '<font color="red">'
-#print str(cnt)+'</font> )<br>'
 
 
 print '&nbsp;<a href="https://zeustracker.abuse.ch/monitor.php?search='+ip+'" target="_blank">Zeus</a>'

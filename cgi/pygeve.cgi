@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/python
 
 pyver = '0.35.4.17'
 
@@ -191,7 +191,7 @@ head =""
 head += "Time: "+htime+"<br>\n"
 head += "Sensor: "+hsnsr+"<br>\n"
 head += "Event: "+hsig
-head += " (<a href=\"./pygrul.cgi?sig="+hsid+"\">"+hsid+"</a>)<br>\n"
+head += " ("+hsid+")<br>\n"
 head += "Src IP: <a href=\"./pygqry.cgi?src="+hsip+"&dst="+hsip+"\" target=\"_blank\">"+hsip+"</a> "
 head += tcps+udps
 if re_ten.search(hsip) or re_oneseventwo.search(hsip) or re_oneseventwo.search(hsip):

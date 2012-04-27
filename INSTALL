@@ -29,7 +29,7 @@ Installation of pygmy involves 3 steps.
 	(Debian: /usr/lib/cgi-bin/, Fedora: /var/www/cgi-bin/, etc)
 	1a) Chmod and chown the files as needed
 		IE:
-		>chown root:www-data /usr/lib/cgi-bin/pyg*
+		>chown root:www-data /usr/lib/cgi-bin/pyg*  (or root:apache,etc)
 		>chmod 750 /usr/lib/cgi-bin/pyg*
 
 	1b) You may have to configure apache to utilize cgi
@@ -51,10 +51,10 @@ Installation of pygmy involves 3 steps.
 		proxy=127.0.0.1:80
 		"""	
 
-	2a) Modify the settings as needed. If no proxy is required or domain research functions are not desired remove the proxy= linei or leave it blank.
+	2a) Modify the settings as needed. If no proxy is required or domain research functions are not desired remove the proxy= line or leave it blank.
 
-	2b) Permissions should be set on this file to allow apache2 (IE www-data in Debian) to access this file.
-		>chown root:www-data /etc/pyg.conf
+	2b) Permissions should be set on this file to allow the apache service to access this file.
+		>chown root:www-data /etc/pyg.conf (or root:apache, etc)
 		>chmod 640 /etc/pyg.conf
 	    
 
@@ -62,16 +62,16 @@ Installation of pygmy involves 3 steps.
 	>cp ./pygmy /var/www or cp ./pygmy /var/www/html
 
 	3a) Permissions should be set appropriately for your web server
-		>chown root:www-data (Debian example)
+		>chown root:www-data (or root:apache, etc)
 		>chmod 550 /var/www/(html)/pygmy
 		>chmod 440 /var/www/(html)/pygmy/*
 
 4) Optionally you can copy the pygmy.html page to your document root to auto-redirect to the cgi
 	>cp /pygmy/pygmy.html.sample /var/www/pygmy.html
-	>chown root:www-data /var/www/pygmy.html	
+	>chown root:www-data /var/www/pygmy.html (or root:apache, etc) 
 	>chmod 440 /var/www/pygmy.html
 
-5) SELinux users may need to run a "setsebool -P httpd_can_network_connect_db on" to allow pygmy to connect to remote snort DBs.
+5) SELinux users may need to run a "setsebool -P httpd_can_network_connect on" to allow pygmy to connect to remote snort DBs and web resources (pygdmn).
 
 Browse to http://your.host.tld/pygmy.html -or- http://your.host.tld/cgi-bin/pygmy.cgi
 
