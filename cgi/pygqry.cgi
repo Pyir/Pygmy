@@ -2,9 +2,6 @@
 
 pyver = '0.35.5.2'
 
-##### Set test = 1 for extra output
-test = 0
-
 
 ##### Timing my self
 import time
@@ -930,110 +927,6 @@ slide(0,"Now")
 print '</tr></table>'
 
 
-##### Print out extra info if test mode is on
-if test > 0: 
-	print '<ul class="mktree" id="root">'
-	print '<li><font size="2">SQL Query</font>'
-	print '<ul>'
-	#print '<li><textarea rows="6" cols="160">'+qrystr+'</textarea></li>'
-	print '<li><font size="2">'+qrystr+'</font></li>'
-	print '</ul></li></ul>'
-	print '<ul class="mktree" id="root">'
-	print '<li><font size="2">Passed Vars'
-	print '<ul>'
-	print '<li>a='+start+'</li>'
-	print '<li>o='+end+'</li>'
-	print '<li>a_yr='
-	if a_yr:
-		print a_yr
-	print '</li>'
-	print '<li>a_mo='
-	if a_mo:
-		print a_mo
-	print '</li>'
-	print '<li>a_dy='
-	if a_dy:
-		print a_yr
-	print '</li>'
-	print '<li>a_hr='
-	if a_hr:
-		print a_hr
-	print '</li>'
-	print '<li>a_mn='
-	if a_mn:
-		print a_mn
-	print '</li>'
-	print '<li>o_yr='
-	if o_yr:
-		print o_yr
-	print '</li>'
-	print '<li>o_mo='
-	if o_mo:
-		print o_mo	
-	print '</li>'
-	print '<li>o_dy='
-	if o_dy:
-		print o_dy	
-	print '</li>'
-	print '<li>o_hr='
-	if o_hr:
-		print o_hr	
-	print '</li>'
-	print '<li>o_mn='
-	if o_mn:
-		print o_mn
-	print '</li>'
-	print '<li>mode='
-	if mode:
-		print mode	
-	print '</li>'
-	print '<li>src='
-	if src:
-		print src
-	print '</li>'
-	print '<li>dst='
-	if dst:
-		print dst
-	print '</li>'
-	print '<li>snsr='
-	if snsr:
-		print snsr
-	print '</li>'
-	print '<li>tcpsrc='
-	if tcpsrc:
-		print tcpsrc
-	print '</li>'
-	print '<li>tcpdst='
-	if tcpdst:
-		print tcpdst
-	print '</li>'
-	print '<li>udpsrc='
-	if udpsrc:
-		print udpsrc
-	print '</li>'
-	print '<li>udpdst='
-	if udpdst:
-		print udpdst	
-	print '</li>'
-	print '<li>sig='
-	if sig:
-		print sig
-	print '</li>'
-	print '<li>sigx='
-	if sigx:
-		print sigx
-	print '</li>'
-	print '<li>cls='
-	if cls:
-		print cls
-	print '</li>'
-	print '<li>clsx='
-	if clsx:
-		print clsx
-	print '</li>'
-	print '</font></ul></li></ul>'
-
-
 ##### Unpack unique event,src,dst sets and sort
 if mode:
 	# Unique Events
@@ -1392,48 +1285,5 @@ print '<br>'
 renderend = time.time()
 
 ## Print Query Link
-print '<ul class="mktree" id="root">'
-print '<li><font size="2">Query: '+str(round(qryend - cgistart,3))+'s - Render: '+str(round(renderend - cgistart,3))+'s</font>'
-print '<ul>'
-outstr = 'http://10.1.15.49/cgi-bin/pygqry.cgi?'
-outstr += 'a_yr='+str(a_yr)
-outstr += '&a_mo='+str(a_mo)
-outstr += '&a_dy='+str(a_dy)
-outstr += '&a_hr='+str(a_hr)
-outstr += '&a_mn='+str(a_mn)
-outstr += '&o_yr='+str(o_yr)
-outstr += '&o_mo='+str(o_mo)
-outstr += '&o_dy='+str(o_dy)
-outstr += '&o_hr='+str(o_hr)
-outstr += '&o_mn='+str(o_mn)
-if mode:
-	outstr += '&m='+mode
-if src:
-        outstr += '&src='+src
-if dst:
-        outstr += '&dst='+dst
-if tcpsrc:
-        outstr += '&tcpsrc='+tcpsrc
-if tcpdst:
-        outstr += '&tcpdst='+tcpdst
-if udpsrc:
-        outstr += '&udpsrc='+udpsrc
-if udpdst:
-        outstr += '&udpdst='+udpdst
-if snsr:
-        outstr += '&snsr='+snsr
-if cls:
-        outstr += '&cls='+cls
-if lim:
-        outstr += '&lim='+str(lim)
-if sig:
-        outstr += '&sig='+sig
-if sigx:
-        outstr += '&sigx='+sigx
-print '<font size="2"><a href="'+outstr+'">link</a>&nbsp;-&nbsp;'
-print '<a href="mailto:?subject=Pygmy Query Link&body='+outstr.replace('&','%26')+'">mailto</a>&nbsp;-&nbsp;'
-print outstr+'</font>'
-print '</ul></li></ul>'
-
-
+print '<font size="2">Query: '+str(round(qryend - cgistart,3))+'s - Render: '+str(round(renderend - cgistart,3))+'s</font>'
 print '</html>'
