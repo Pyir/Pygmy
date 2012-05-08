@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-pyver = '0.35.4.17'
+pyver = '0.35.5.8'
 
 import time
 cgistart = time.time()
@@ -121,17 +121,18 @@ db=_mysql.connect(host=conf_host,db=conf_db,user=conf_user,passwd=conf_passwd)
 
 
 ##### Main query: Payload, ips, time, etc
-qrystr="Select event.timestamp,sensor.hostname,signature.sig_name,iphdr.ip_src,iphdr.ip_dst,signature.sig_sid from event left join(sensor,signature,iphdr) on (event.sid = sensor.sid and event.signature = signature.sig_id and event.sid = iphdr.sid and event.cid = iphdr.cid) where event.cid = '"+cid+"' and event.sid = '"+sid+"'"
+qrystr="Select event.timestamp,sensor.hostname,sensor.interface,signature.sig_name,iphdr.ip_src,iphdr.ip_dst,signature.sig_sid from event left join(sensor,signature,iphdr) on (event.sid = sensor.sid and event.signature = signature.sig_id and event.sid = iphdr.sid and event.cid = iphdr.cid) where event.cid = '"+cid+"' and event.sid = '"+sid+"'"
 db.query(qrystr)
 dbqry=db.store_result()
 qryres=dbqry.fetch_row()
 if qryres:
 	htime=qryres[0][0]
 	hsnsr=qryres[0][1]
-	hsig=qryres[0][2]
-	hsip=numtoip(int(qryres[0][3]))
-	hdip=numtoip(int(qryres[0][4]))
-	hsid=qryres[0][5]	
+	hifc=qryres[0][2]
+	hsig=qryres[0][3]
+	hsip=numtoip(int(qryres[0][4]))
+	hdip=numtoip(int(qryres[0][5]))
+	hsid=qryres[0][6]
 else:
         htime="null"
         hsnsr="null"
@@ -189,7 +190,7 @@ else:
 ##### Build common header
 head =""
 head += "Time: "+htime+"<br>\n"
-head += "Sensor: "+hsnsr+"<br>\n"
+head += "Sensor: "+hsnsr+" - "+hifc+"<br>\n"
 head += "Event: "+hsig
 head += " ("+hsid+")<br>\n"
 head += "Src IP: <a href=\"./pygqry.cgi?src="+hsip+"&dst="+hsip+"\" target=\"_blank\">"+hsip+"</a> "
