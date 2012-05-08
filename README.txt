@@ -1,0 +1,1 @@
+Pygmy is a light weight Snort IDS console written in Python that includes a dashboard view, complex searching, mktree.js hierchy display of results, multiple payload data views and ip/domain reputation lookup tools. 
