@@ -1,6 +1,6 @@
-#!/usr/bin/python
+#!/usr/local/bin/python
 
-pyver = '0.35.5.8'
+pyver = '0.35.6.12'
 
 import time
 cgistart = time.time()
@@ -195,23 +195,9 @@ head += "Event: "+hsig
 head += " ("+hsid+")<br>\n"
 head += "Src IP: <a href=\"./pygqry.cgi?src="+hsip+"&dst="+hsip+"\" target=\"_blank\">"+hsip+"</a> "
 head += tcps+udps
-if re_ten.search(hsip) or re_oneseventwo.search(hsip) or re_oneseventwo.search(hsip):
-	dmn = rvrslv(hsip)
-	head += " - "+dmn
-else:
-	dmn = rvrslv(hsip)
-	head += " - "+dmn
-	head += "&nbsp;(<a href=\"./pygdmn.cgi?ip="+hsip+"\">info</a>) "
 head += "<br>\n"
 head += "Dst IP: <a href=\"./pygqry.cgi?src="+hdip+"&dst="+hdip+"\" target=\"_blank\">"+hdip+"</a> "
 head += tcpd+udpd
-if re_ten.search(hdip) or re_oneseventwo.search(hdip) or re_oneninetwo.search(hdip):
-	dmn = rvrslv(hdip)
-	head += " - "+dmn	
-else:
-	dmn = rvrslv(hdip)
-	head += " - "+dmn
-        head += "&nbsp;(<a href=\"./pygdmn.cgi?ip="+hdip+"\">info</a>) "
 head += "<br>\n"
 
 

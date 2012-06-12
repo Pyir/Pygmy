@@ -1,7 +1,6 @@
 #!/usr/local/bin/python
 
-pyver = '0.35.5.2'
-
+pyver = '0.35.6.12'
 
 ##### Timing my self
 import time
@@ -755,11 +754,15 @@ print '<td>&nbsp;</td>'
 print '<td><font size="2">Sensor:</td>'
 print '<td><select name="snsr" style="width:150px">'
 print ' <option value="" width="800"> - </option>'
+slist = []
 for s in sensors:
-        print ' <option '
-	if s == snsr:
-		print 'selected '	
-	print 'value="'+s+'">'+sensors[s]+'</option>'
+	slist.append((sensors[s],s))
+slist.sort()
+for s in slist:
+	print ' <option '
+	if s[1] == snsr:
+		print 'selected '
+	print 'value="'+s[1]+'">'+s[0]+'</option>'
 print '</select></td>'
 print '<td>&nbsp;</td>'
 print '<td><font size="2">Sig Txt:</td><td><input type="text" name="sigx" style="width:100px;text-align:right"'
@@ -803,11 +806,15 @@ print '<td>&nbsp;</td>'
 print '<td><font size="2">Class:</td>'
 print '<td><select name="cls" style="width:150px">'
 print ' <option value=""> - </option>'
+clist = []
 for c in classes:
+        clist.append((classes[c],c))
+clist.sort()
+for c in clist:
         print ' <option '
-	if classes[c] == clsx or c == cls:
+	if c[0] == clsx or c[1] == cls:
 		print 'selected '	
-	print 'value="'+c+'">'+classes[c]+'</option>'
+	print 'value="'+c[1]+'">'+c[0]+'</option>'
 print '</select></td>'
 print '<td>&nbsp;</td>'
 print '<td><font size="2">Sig ID:</td>'
@@ -1035,11 +1042,12 @@ if mode == 'es' or mode == 'ed':
 					print '</font>'
 				print ' events )'
                         	print '<ul>'
-				for item in esd_src: 
+				for item in esd_usrc: 
 					out = []
 					clr = 3
 					for line in store:
 						if line[0][3] == esd_sid and ((mode == 'es' and line[0][7] == item) or (mode == 'ed' and  line[0][8] == item)):
+							# Yellow bars every third row
 							if clr == 3:
 								outstr = '<tr bgcolor="EEEECC">'
 								clr = 1

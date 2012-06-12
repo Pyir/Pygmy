@@ -1,6 +1,6 @@
-#!/usr/bin/python
+#!/usr/local/bin/python
 
-pyver = '0.35.4.17'
+pyver = '0.35.6.12'
 
 import os,re,_mysql,datetime,time
 
@@ -82,10 +82,22 @@ while rc != dbqry.num_rows():
                 rc += 1
         except Exception:
                 rc += 1
+# Sort sids into a ordered list sidi_index(si) 
 si = []
 for i in snsrs:
-	si.append(int(i))
+	si.append(snsrs[i])
 si.sort()
+
+# Walk si and get proper sid order (sorted_snsrs)
+ssnsrs = []
+# sid 1,2,3
+for s in si:
+	# walk snsr dict for 1,2,3 
+	for ss in snsrs:
+		if s == snsrs[ss]:
+			# plug into ordered list proper like
+			ssnsrs.append((ss,s)) 
+# ssnsrs is an ordered list of tuples(sid,name|eth)
 
 ### Grab class list
 qrystr = 'select sig_class_id,sig_class_name from sig_class order by sig_class_id'
@@ -113,6 +125,7 @@ print '<html>'
 print '<head>'
 print '<title>Pygmy Snort Console </title>'
 print '<script src="../pygmy/popup.js" type="text/javascript" ></script>'
+print '<script src="../pygmy/popupg.js" type="text/javascript" ></script>'
 print '</head>'
 print '<body>'
 print '<font face="calibri">'
@@ -157,7 +170,7 @@ while rc != dbqry.num_rows():
                 rc += 1
 
 ######################### Src IP Count
-qrystr = 'select iphdr.ip_src,count(event.cid) from event join iphdr on (event.sid = iphdr.sid and event.cid = iphdr.cid) where timestamp >= Date_Sub(NOW(),INTERVAL 6 HOUR) group by iphdr.ip_src order by count(event.cid) desc limit 10'
+qrystr = 'select iphdr.ip_src,count(event.cid) from event join iphdr on (event.sid = iphdr.sid and event.cid = iphdr.cid) where timestamp >= Date_Sub(NOW(),INTERVAL '+str(frmid)+' MINUTE) group by iphdr.ip_src order by count(event.cid) desc limit 10'
 db.query(qrystr)
 dbqry=db.store_result()
 topsrc = []
@@ -171,7 +184,7 @@ while rc != dbqry.num_rows():
                 rc += 1
 
 ######################## Dst IP Count
-qrystr = 'select iphdr.ip_dst,count(event.cid) from event join iphdr on (event.sid = iphdr.sid and event.cid = iphdr.cid) where timestamp >= Date_Sub(NOW(),INTERVAL 6 HOUR) group by iphdr.ip_dst order by count(event.cid) desc limit 10'
+qrystr = 'select iphdr.ip_dst,count(event.cid) from event join iphdr on (event.sid = iphdr.sid and event.cid = iphdr.cid) where timestamp >= Date_Sub(NOW(),INTERVAL '+str(frmid)+' MINUTE) group by iphdr.ip_dst order by count(event.cid) desc limit 10'
 db.query(qrystr)
 dbqry=db.store_result()
 topdst = []
@@ -185,7 +198,7 @@ while rc != dbqry.num_rows():
                 rc += 1
 
 ####################### TCP sport
-qrystr = 'select tcphdr.tcp_sport,count(event.cid) from event join tcphdr on (event.sid = tcphdr.sid and event.cid = tcphdr.cid) where timestamp >= Date_Sub(NOW(),INTERVAL 6 HOUR) group by tcphdr.tcp_sport order by count(event.cid) desc limit 10'
+qrystr = 'select tcphdr.tcp_sport,count(event.cid) from event join tcphdr on (event.sid = tcphdr.sid and event.cid = tcphdr.cid) where timestamp >= Date_Sub(NOW(),INTERVAL '+str(frmid)+' MINUTE) group by tcphdr.tcp_sport order by count(event.cid) desc limit 10'
 db.query(qrystr)
 dbqry=db.store_result()
 tcpsp = []
@@ -199,7 +212,7 @@ while rc != dbqry.num_rows():
                 rc += 1
 
 ###################### TCP dp
-qrystr = 'select tcphdr.tcp_dport,count(event.cid) from event join tcphdr on (event.sid = tcphdr.sid and event.cid = tcphdr.cid) where timestamp >= Date_Sub(NOW(),INTERVAL 6 HOUR) group by tcphdr.tcp_dport order by count(event.cid) desc limit 10'
+qrystr = 'select tcphdr.tcp_dport,count(event.cid) from event join tcphdr on (event.sid = tcphdr.sid and event.cid = tcphdr.cid) where timestamp >= Date_Sub(NOW(),INTERVAL '+str(frmid)+' MINUTE) group by tcphdr.tcp_dport order by count(event.cid) desc limit 10'
 db.query(qrystr)
 dbqry=db.store_result()
 tcpdp = []
@@ -213,7 +226,7 @@ while rc != dbqry.num_rows():
                 rc += 1
 
 ####################### UDP sp
-qrystr = 'select udphdr.udp_sport,count(event.cid) from event join udphdr on (event.sid = udphdr.sid and event.cid = udphdr.cid) where timestamp >= Date_Sub(NOW(),INTERVAL 6 HOUR) group by udphdr.udp_sport order by count(event.cid) desc limit 10'
+qrystr = 'select udphdr.udp_sport,count(event.cid) from event join udphdr on (event.sid = udphdr.sid and event.cid = udphdr.cid) where timestamp >= Date_Sub(NOW(),INTERVAL '+str(frmid)+' MINUTE) group by udphdr.udp_sport order by count(event.cid) desc limit 10'
 db.query(qrystr)
 dbqry=db.store_result()
 udpsp = []
@@ -227,7 +240,7 @@ while rc != dbqry.num_rows():
                 rc += 1
 
 ###################### UDP dp
-qrystr = 'select udphdr.udp_dport,count(event.cid) from event join udphdr on (event.sid = udphdr.sid and event.cid = udphdr.cid) where timestamp >= Date_Sub(NOW(),INTERVAL 6 HOUR) group by udphdr.udp_dport order by count(event.cid) desc limit 10'
+qrystr = 'select udphdr.udp_dport,count(event.cid) from event join udphdr on (event.sid = udphdr.sid and event.cid = udphdr.cid) where timestamp >= Date_Sub(NOW(),INTERVAL '+str(frmid)+' MINUTE) group by udphdr.udp_dport order by count(event.cid) desc limit 10'
 db.query(qrystr)
 dbqry=db.store_result()
 udpdp = []
@@ -241,7 +254,7 @@ while rc != dbqry.num_rows():
                 rc += 1
 
 ######################### Src to uniq dst
-qrystr = 'select iphdr.ip_src, count(distinct iphdr.ip_dst) from event join iphdr on (event.cid = iphdr.cid and event.sid = iphdr.sid) where event.timestamp >= Date_Sub(NOW(), Interval 6 Hour) group by iphdr.ip_src order by count(distinct iphdr.ip_dst) desc limit 10'
+qrystr = 'select iphdr.ip_src, count(distinct iphdr.ip_dst) from event join iphdr on (event.cid = iphdr.cid and event.sid = iphdr.sid) where event.timestamp >= Date_Sub(NOW(),INTERVAL '+str(frmid)+' MINUTE) group by iphdr.ip_src order by count(distinct iphdr.ip_dst) desc limit 10'
 db.query(qrystr)
 dbqry=db.store_result()
 srcxd = []
@@ -255,7 +268,7 @@ while rc != dbqry.num_rows():
 		rc += 1
 
 ###################### Dst to uniq Src
-qrystr = 'select iphdr.ip_dst, count(distinct iphdr.ip_src) from event join iphdr on (event.cid = iphdr.cid and event.sid = iphdr.sid) where event.timestamp >= Date_Sub(NOW(), Interval 6 Hour) group by iphdr.ip_dst order by count(distinct iphdr.ip_src) desc limit 10'
+qrystr = 'select iphdr.ip_dst, count(distinct iphdr.ip_src) from event join iphdr on (event.cid = iphdr.cid and event.sid = iphdr.sid) where event.timestamp >= Date_Sub(NOW(),INTERVAL '+str(frmid)+' MINUTE) group by iphdr.ip_dst order by count(distinct iphdr.ip_src) desc limit 10'
 db.query(qrystr)
 dbqry=db.store_result()
 dstxs = []
@@ -269,7 +282,7 @@ while rc != dbqry.num_rows():
 		rc += 1
 
 ###################### Src to uniq events
-qrystr = 'select iphdr.ip_src, count(distinct event.signature) from event join iphdr on (event.sid = iphdr.sid and event.cid = iphdr.cid) where event.timestamp >= Date_Sub(NOW(), Interval 6 Hour) group by ip_src order by count(distinct event.signature) desc limit 10'
+qrystr = 'select iphdr.ip_src, count(distinct event.signature) from event join iphdr on (event.sid = iphdr.sid and event.cid = iphdr.cid) where event.timestamp >= Date_Sub(NOW(),INTERVAL '+str(frmid)+' MINUTE) group by ip_src order by count(distinct event.signature) desc limit 10'
 db.query(qrystr)
 dbqry=db.store_result()
 srcex = []
@@ -283,7 +296,7 @@ while rc != dbqry.num_rows():
                 rc += 1
 
 ###################### Dst to uniq events
-qrystr = 'select iphdr.ip_dst, count(distinct event.signature) from event join iphdr on (event.sid = iphdr.sid and event.cid = iphdr.cid) where event.timestamp >= Date_Sub(NOW(), Interval 6 Hour) group by ip_dst order by count(distinct event.signature) desc limit 10'
+qrystr = 'select iphdr.ip_dst, count(distinct event.signature) from event join iphdr on (event.sid = iphdr.sid and event.cid = iphdr.cid) where event.timestamp >= Date_Sub(NOW(),INTERVAL '+str(frmid)+' MINUTE) group by ip_dst order by count(distinct event.signature) desc limit 10'
 db.query(qrystr)
 dbqry=db.store_result()
 dstex = []
@@ -332,8 +345,7 @@ for sigid in rcntsig:
 		rcntend[str(sigid)] = 'None'
 
 #################### Snsr / Type grid
-data = dict()
-qrystr = 'select sid,hostname,interface from sensor'
+qrystr = 'select sid,hostname,interface from sensor order by sid'
 db.query(qrystr)
 dbqry = db.store_result()
 snsrs = dict() 
@@ -346,11 +358,10 @@ while rc != dbqry.num_rows():
                 rc += 1
         except Exception:
                 rc += 1
-
-## Build placeholders for data grid
+## Build placeholders for data grid 
+data = dict()
 for snsr in snsrs:
 	data[snsr]=dict()
-
 qrystr = 'select sig_class_name from sig_class'
 db.query(qrystr)
 dbqry=db.store_result()
@@ -364,11 +375,10 @@ while rc != dbqry.num_rows():
         except Exception:
                 rc += 1
 
-
-# Get event counts per class/sensor for grid
+# Get event counts per class/sensor for grid and plug into data grid
 for cls in clss:
 	qrystr = "select distinct sensor.sid,count(event.cid) from sensor join (event,signature,sig_class) on (sensor.sid = event.sid and event.signature = signature.sig_id and signature.sig_class_id = sig_class.sig_class_id)"
-	qrystr += " where event.timestamp >= Date_Sub(NOW(), Interval "+frmid+" minute) and sig_class.sig_class_name = '"+cls+"' group by sensor.hostname"
+	qrystr += " where event.timestamp >= Date_Sub(NOW(),INTERVAL "+frmid+" minute) and sig_class.sig_class_name = '"+cls+"' group by sensor.sid"
 	db.query(qrystr)
 	dbqry=db.store_result()
 	rc = 0
@@ -383,26 +393,28 @@ for cls in clss:
 
 ############### Start printing the grids and Tops #######################################
 print '<table width="1412" frame="box" rules="all">'
-print '<tr><td><a href="./pygqry.cgi?m=es&a=0&o=60"><img src="../pygmy/pyg.jpg"></a></td>'
-print '<td><font size="1"><center>Last Event</td>'
+# Label Row (classes)
+print '<tr><td width="65"><a href="./pygqry.cgi?m=es&a=0&o=60" target="_blank"><img src="../pygmy/pyg.jpg"></a></td>'
+print '<td width="48"><font size="1"><center>Last Event</center></td>'
 for cls in clss:
-	print '<td align="center"><font size="1"><a href="./pygqry.cgi?a=0&o='+frmid+'&m=es&clsx='+cls+'">'+sts(cls)+'</td>'
+	print '<td><font size="1"><center><a href="./pygqry.cgi?a=0&o='+frmid+'&m=es&clsx='+cls+'" target="_blank">'+sts(cls)+'</a></center></td>'
 print '</tr>'	
-for snsr in snsrs:
-	print '<tr><td><font size="1">&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=es&snsr='+snsr+'">'+snsrs[snsr]+'&nbsp;</a>'
-	qrystr = "select event.timestamp from event join sensor on (event.sid = sensor.sid) where event.timestamp >= Date_Sub(Now(), Interval 12 Hour) and sensor.sid = '"+snsr+"' order by event.timestamp desc limit 1"	
+# Graph Button Row
+for sd,sn in ssnsrs:
+	print '<tr><td><font size="1">&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=es&snsr='+sd+'" target="_blank">'+sn+'</a></td>'
+	qrystr = "select event.timestamp from event join sensor on (event.sid = sensor.sid) where event.timestamp >= Date_Sub(Now(), Interval 12 Hour) and sensor.sid = '"+sd+"' order by event.timestamp desc limit 1"
 	db.query(qrystr)
 	dbqry=db.store_result()
 	line = dbqry.fetch_row()
 	if dbqry.num_rows() == 0:
-		line = '+12hr'
+		line = '<font color="#80000"><b>12hr</b></font>'
 	else:
 		line = str(line[0][0]).split(' ')[1]
 	print '<td><font size="1">&nbsp;'+line+'&nbsp;</td>'
 	for cls in clss:
 		print '<td align="right"><font size="2">'
 		try:
-			print '<a href="./pygqry.cgi?a=0&o='+frmid+'&m=es&snsr='+snsr+'&clsx='+cls+'">'+data[snsr][cls]+'</a>&nbsp;&nbsp;'
+			print '<a href="./pygqry.cgi?a=0&o='+frmid+'&m=es&snsr='+sd+'&clsx='+cls+'" target="_blank">'+data[sd][cls]+'</a>&nbsp;&nbsp;'
 		except Exception:
 			print '&nbsp;'
 		print '</td>'
@@ -423,7 +435,7 @@ for line in topeve:
 			sgxo += '%2B'
 		else:
 			sgxo += chr
-	print '<tr><td><font size="2">&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=es&sigx='+sgxo+'">'+line.split('~')[0][:75]+'</a></td><td><font size="2">'+line.split('~')[1]+'</td></tr>'
+	print '<tr><td><font size="2">&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=es&sigx='+sgxo+'" target="_blank">'+line.split('~')[0][:75]+'</a></td><td><font size="2">'+line.split('~')[1]+'</td></tr>'
 fill = 10 - lc
 for n in range(1,fill):
 	print '<tr><td><font size="2">&nbsp;</td><td><font size="2">&nbsp;</td></tr>' 
@@ -440,11 +452,11 @@ for line in lasteve:
 	outstr += '</td><td><font size="2">'
 	outstr += line.split('~')[1]
         outstr += '</td><td><font size="2">'
-	outstr += '<a href="./pygeve.cgi?s='+line.split('~')[5]+'&c='+line.split('~')[6]+'" onClick="return popup(this,\'data\')" target="data">'+line.split('~')[2][:75]+'</a>'
+	outstr += '<a href="./pygeve.cgi?s='+line.split('~')[5]+'&c='+line.split('~')[6]+'" onClick="return popup(this,\'data\')">'+line.split('~')[2][:75]+'</a>'
         outstr += '</td><td align="right"><font size="2">'
-	outstr += '<a href="./pygqry.cgi?a=0&o='+frmid+'&src='+numtoip(int(line.split('~')[3]))+'&dst='+numtoip(int(line.split('~')[3]))+'">'+numtoip(int(line.split('~')[3]))+'</a>'
+	outstr += '<a href="./pygqry.cgi?a=0&o='+frmid+'&src='+numtoip(int(line.split('~')[3]))+'&dst='+numtoip(int(line.split('~')[3]))+'" target="_blank">'+numtoip(int(line.split('~')[3]))+'</a>'
         outstr += '</td><td align="left"><font size="2">&rarr;'
-	outstr += '<a href="./pygqry.cgi?a=0&o='+frmid+'&src='+numtoip(int(line.split('~')[4]))+'&dst='+numtoip(int(line.split('~')[4]))+'">'+numtoip(int(line.split('~')[4]))+'</a>'
+	outstr += '<a href="./pygqry.cgi?a=0&o='+frmid+'&src='+numtoip(int(line.split('~')[4]))+'&dst='+numtoip(int(line.split('~')[4]))+'" target="_blank">'+numtoip(int(line.split('~')[4]))+'</a>'
         outstr += '</td></tr>'
 	print outstr
 fill = 10 - lc
@@ -462,7 +474,7 @@ lc = 0
 for line in srcxd:
 	lc += 1
         print '<tr><td><font size="2">'
-        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=ed&src='+numtoip(int(line.split('~')[0]))+'">'+numtoip(int(line.split('~')[0]))+'</a>'
+        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=ed&src='+numtoip(int(line.split('~')[0]))+'" target="_blank">'+numtoip(int(line.split('~')[0]))+'</a>'
         print '</td><td><font size="2">'
         print line.split('~')[1]
         print '</td></tr>'
@@ -477,7 +489,7 @@ lc = 0
 for line in dstxs:
 	lc += 1
         print '<tr><td><font size="2">'
-        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=es&dst='+numtoip(int(line.split('~')[0]))+'">'+numtoip(int(line.split('~')[0]))+'</a>'
+        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=es&dst='+numtoip(int(line.split('~')[0]))+'" target="_blank">'+numtoip(int(line.split('~')[0]))+'</a>'
         print '</td><td><font size="2">'
         print line.split('~')[1]
         print '</td></tr>'
@@ -492,7 +504,7 @@ lc = 0
 for line in srcex:
 	lc += 1
         print '<tr><td><font size="2">'
-        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=se&src='+numtoip(int(line.split('~')[0]))+'">'+numtoip(int(line.split('~')[0]))+'</a>'
+        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=se&src='+numtoip(int(line.split('~')[0]))+'" target="_blank">'+numtoip(int(line.split('~')[0]))+'</a>'
         print '</td><td><font size="2">'
         print line.split('~')[1]
         print '</td></tr>'
@@ -507,7 +519,7 @@ lc = 0
 for line in dstex:
 	lc += 1
         print '<tr><td><font size="2">'
-        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=de&dst='+numtoip(int(line.split('~')[0]))+'">'+numtoip(int(line.split('~')[0]))+'</a>'
+        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=de&dst='+numtoip(int(line.split('~')[0]))+'" target="_blank">'+numtoip(int(line.split('~')[0]))+'</a>'
         print '</td><td><font size="2">'
         print line.split('~')[1]
         print '</td></tr>'
@@ -535,7 +547,7 @@ for sgid in sorted(rcntsig, reverse=True):
 	print '&nbsp;<a href="./pygqry.cgi?m=es&sig='+sgid
 	print '&a_yr='+rcnt_a[0]+'&a_mo='+rcnt_a[1]+'&a_dy='+rcnt_a[2]+'&a_hr='+rcnt_a[3]+'&a_mn='+str(int(rcnt_a[4])+1)
 	print '&o_yr='+rcnt_o[0]+'&o_mo='+rcnt_o[1]+'&o_dy='+rcnt_o[2]+'&o_hr='+rcnt_o[3]+'&o_mn='+str(int(rcnt_o[4])-1)
-	print '">'+rcntsig[sgid][:70]+'</a>'
+	print '" target="_blank">'+rcntsig[sgid][:70]+'</a>'
 	print '<td><font size="2">'
 	print rcnt_a[1].lstrip('0')+'-'+rcnt_a[2]+' '+rcnt_a[3]+':'+rcnt_a[4]
 	print '</td></tr>'
@@ -557,7 +569,7 @@ lc = 0
 for line in topsrc:
 	lc += 1
 	print '<tr><td><font size="2">'
-	print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=se&src='+numtoip(int(line.split('~')[0]))+'">'+numtoip(int(line.split('~')[0]))+'</a>'
+	print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=se&src='+numtoip(int(line.split('~')[0]))+'" target="_blank">'+numtoip(int(line.split('~')[0]))+'</a>'
 	print '</td>'
 	print '<td><font size="2">'
 	print line.split('~')[1]
@@ -574,7 +586,7 @@ lc = 0
 for line in topdst:
 	lc += 1
         print '<tr><td><font size="2">'
-        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=de&dst='+numtoip(int(line.split('~')[0]))+'">'+numtoip(int(line.split('~')[0]))+'</a>'
+        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=de&dst='+numtoip(int(line.split('~')[0]))+'" target="_blank">'+numtoip(int(line.split('~')[0]))+'</a>'
         print '</td>'
         print '<td><font size="2">'
         print line.split('~')[1]
@@ -591,7 +603,7 @@ lc = 0
 for line in tcpsp:
 	lc += 1
         print '<tr><td><font size="2">'
-        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=se&tcpsrc='+line.split('~')[0]+'">'+line.split('~')[0]+'</a>'
+        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=se&tcpsrc='+line.split('~')[0]+'" target="_blank">'+line.split('~')[0]+'</a>'
         print '</td>'
         print '<td><font size="2">'
         print line.split('~')[1]
@@ -608,7 +620,7 @@ lc = 0
 for line in tcpdp:
 	lc += 1
         print '<tr><td><font size="2">'
-        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=de&tcpdst='+line.split('~')[0]+'">'+line.split('~')[0]+'</a>'
+        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=de&tcpdst='+line.split('~')[0]+'" target="_blank">'+line.split('~')[0]+'</a>'
         print '</td>'
         print '<td><font size="2">'
         print line.split('~')[1]
@@ -625,7 +637,7 @@ lc = 0
 for line in udpsp:
 	lc += 1
         print '<tr><td><font size="2">'
-        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=se&udpsrc='+line.split('~')[0]+'">'+line.split('~')[0]+'</a>'
+        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=se&udpsrc='+line.split('~')[0]+'" target="_blank">'+line.split('~')[0]+'</a>'
         print '</td>'
         print '<td><font size="2">'
         print line.split('~')[1]
@@ -642,7 +654,7 @@ lc = 0
 for line in udpdp:
 	lc += 1
         print '<tr><td><font size="2">'
-        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=de&udpdst='+line.split('~')[0]+'">'+line.split('~')[0]+'</a>'
+        print '&nbsp;<a href="./pygqry.cgi?a=0&o='+frmid+'&m=de&udpdst='+line.split('~')[0]+'" target="_blank">'+line.split('~')[0]+'</a>'
         print '</td>'
         print '<td><font size="2">'
         print line.split('~')[1]
