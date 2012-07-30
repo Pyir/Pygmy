@@ -22,7 +22,7 @@ re_oneninetwo=re.compile('^192\.168')
 re_ip=re.compile('^[12]?[0-9]?[0-9]\.[12]?[0-9]?[0-9]\.[12]?[0-9]?[0-9]\.[12]?[0-9]?[0-9]$')
 re_ty=re.compile('[a-zA-Z0-9]')
 re_tck=re.compile('\'')
-
+re_txa=re.compile('</textarea>')
 
 ##### CGI grabbing
 try:
@@ -240,7 +240,9 @@ if raw == 'yes' or raw == 'y':
 elif hex == 'yes' or hex == 'y':
         print str(qryres[0][0]) 
 else:
-	print pyldout
+	pyldout = pyldout.split('\n')
+	for ln in pyldout:	
+		print re_txa.sub('<|textarea>',ln)
 print '</textarea><br>'
 print '('+str(round(cgiend - cgistart,3))+' sec)<br>'
 print '</div>'

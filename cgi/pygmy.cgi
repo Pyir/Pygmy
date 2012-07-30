@@ -529,7 +529,7 @@ for n in range(1,fill):
 print '</table>'
 print '</td><td>'
 print '<table width="512" height="270" frame="box">'
-print '<tr><td><font size="2"><b>Newest Sigs</td><td></td></tr>'
+print '<tr><td><font size="2"><b>Newest Signatures</td><td></td></tr>'
 lc = 0 
 for sgid in sorted(rcntsig, reverse=True):
 	lc += 1
